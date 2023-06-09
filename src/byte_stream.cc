@@ -4,74 +4,104 @@
 
 using namespace std;
 
-ByteStream::ByteStream( uint64_t capacity ) : capacity_( capacity ) {}
+ByteStream::ByteStream( uint64_t capacity ) : capacity_( capacity )
+{
+  buffer_.reserve( capacity );
+}
+
+void ByteStream::mergeLeisure()
+{
+  std::copy( buffer_.data() + start_, buffer_.data() + len_, buffer_.data() );
+  len_ -= start_;
+  start_ = 0;
+}
 
 void Writer::push( string data )
 {
-  // Your code here.
-  (void)data;
+  uint64_t len = data.size();
+  if ( len > available_capacity() ) {
+    data.resize( available_capacity() );
+    len = data.size();
+  }
+
+  if ( len <= capacity_ - len_ ) {
+    std::copy( data.begin(), data.end(), buffer_.begin() + len_ );
+    len_ += len;
+    pushed_bytes_ += len;
+  } else {
+    mergeLeisure();
+    std::copy( data.begin(), data.end(), buffer_.begin() + len_ );
+    len_ += len;
+    pushed_bytes_ += len;
+  }
 }
 
 void Writer::close()
 {
   // Your code here.
+  closed_ = true;
 }
 
 void Writer::set_error()
 {
   // Your code here.
+  has_err_ = true;
 }
 
 bool Writer::is_closed() const
 {
   // Your code here.
-  return {};
+  return closed_;
 }
 
 uint64_t Writer::available_capacity() const
 {
   // Your code here.
-  return {};
+  return capacity_ - len_ + start_;
 }
 
 uint64_t Writer::bytes_pushed() const
 {
   // Your code here.
-  return {};
+  return pushed_bytes_;
 }
 
 string_view Reader::peek() const
 {
   // Your code here.
-  return {};
+  return { buffer_.data() + start_, len_ - start_ };
 }
 
 bool Reader::is_finished() const
 {
   // Your code here.
-  return {};
+  return closed_ && len_ == start_;
 }
 
 bool Reader::has_error() const
 {
   // Your code here.
-  return {};
+  return has_err_;
 }
 
 void Reader::pop( uint64_t len )
 {
   // Your code here.
-  (void)len;
+  if ( len > len_ - start_ ) {
+    len = len_ - start_;
+  }
+  start_ += len;
+  popped_bytes_ += len;
 }
 
 uint64_t Reader::bytes_buffered() const
 {
   // Your code here.
-  return {};
+  return len_ - start_;
 }
 
 uint64_t Reader::bytes_popped() const
 {
   // Your code here.
-  return {};
+  return popped_bytes_;
 }

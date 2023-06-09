@@ -1,9 +1,9 @@
 #pragma once
 
-#include <queue>
+#include <algorithm>
 #include <stdexcept>
 #include <string>
-#include <string_view>
+#include <vector>
 
 class Reader;
 class Writer;
@@ -11,8 +11,14 @@ class Writer;
 class ByteStream
 {
 protected:
-  uint64_t capacity_;
-  // Please add any additional state to the ByteStream here, and not to the Writer and Reader interfaces.
+  uint64_t start_ { 0 };
+  uint64_t len_ { 0 };
+  uint64_t capacity_ { 0 };
+  std::vector<char> buffer_ {};
+  bool has_err_ { false };
+  bool closed_ { false };
+  uint64_t popped_bytes_ { 0 };
+  uint64_t pushed_bytes_ { 0 };
 
 public:
   explicit ByteStream( uint64_t capacity );
@@ -22,6 +28,8 @@ public:
   const Reader& reader() const;
   Writer& writer();
   const Writer& writer() const;
+
+  void mergeLeisure();
 };
 
 class Writer : public ByteStream
