@@ -2,10 +2,21 @@
 
 #include "byte_stream.hh"
 
+#include <limits>
+#include <map>
 #include <string>
 
 class Reassembler
 {
+private:
+  std::map<uint64_t, std::string> buffer_ {};
+  uint64_t next_index_ { 0 };
+  uint64_t max_index_ { 0 };
+  uint64_t end_index_ { std::numeric_limits<uint64_t>::max() };
+
+private:
+  void pushToBuffer( uint64_t left_index, std::string&& data );
+
 public:
   /*
    * Insert a new substring to be reassembled into a ByteStream.
