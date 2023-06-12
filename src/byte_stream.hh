@@ -28,8 +28,8 @@ public:
   const Reader& reader() const;
   Writer& writer();
   const Writer& writer() const;
-
-  void mergeLeisure();
+protected:
+  void makeSpace();
 };
 
 class Writer : public ByteStream

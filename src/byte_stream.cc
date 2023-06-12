@@ -9,7 +9,7 @@ ByteStream::ByteStream( uint64_t capacity ) : capacity_( capacity )
   buffer_.reserve( capacity );
 }
 
-void ByteStream::mergeLeisure()
+void ByteStream::makeSpace()
 {
   std::copy( buffer_.data() + start_, buffer_.data() + len_, buffer_.data() );
   len_ -= start_;
@@ -29,7 +29,7 @@ void Writer::push( string data )
     len_ += len;
     pushed_bytes_ += len;
   } else {
-    mergeLeisure();
+    makeSpace();
     std::copy( data.begin(), data.end(), buffer_.begin() + len_ );
     len_ += len;
     pushed_bytes_ += len;

@@ -1,7 +1,5 @@
 #include "reassembler.hh"
 
-#include <iostream>
-
 using namespace std;
 
 void Reassembler::insert( uint64_t first_index, string data, bool is_last_substring, Writer& output )
@@ -19,7 +17,6 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
   if ( first_index + data.size() <= next_index_ || first_index >= max_index_ || max_index_ == next_index_ ) {
     return;
   }
-  std::cout <<"origin :" <<data << std::endl;
   // slice front
   if ( first_index < next_index_ && first_index + data.size() > next_index_ ) {
     data = data.substr( next_index_ - first_index );
