@@ -71,7 +71,7 @@ void Reassembler::pushToBuffer( uint64_t left_index, std::string&& data )
     auto pre_it = prev( it );
     uint64_t prev_right_index = pre_it->first + pre_it->second.size();
     // 判断是否被包含
-    if(prev_right_index>=right_index_){
+    if ( prev_right_index >= right_index_ ) {
       return;
     }
     if ( prev_right_index >= left_index ) {

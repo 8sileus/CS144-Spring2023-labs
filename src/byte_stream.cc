@@ -6,7 +6,7 @@ using namespace std;
 
 ByteStream::ByteStream( uint64_t capacity ) : capacity_( capacity )
 {
-  buffer_.reserve( capacity );
+  buffer_.resize( capacity );
 }
 
 void ByteStream::makeSpace()

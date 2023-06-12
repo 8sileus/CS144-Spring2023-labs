@@ -11,10 +11,18 @@
 class Wrap32
 {
 protected:
-  uint32_t raw_value_ {};
+  uint32_t raw_value_ { 0 };
 
 public:
   explicit Wrap32( uint32_t raw_value ) : raw_value_( raw_value ) {}
+
+  Wrap32( const Wrap32& other ) : raw_value_( other.raw_value_ ) {}
+
+  Wrap32& operator=( const Wrap32& other )
+  {
+    raw_value_ = other.raw_value_;
+    return *this;
+  }
 
   /* Construct a Wrap32 given an absolute sequence number n and the zero point. */
   static Wrap32 wrap( uint64_t n, Wrap32 zero_point );
