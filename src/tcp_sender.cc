@@ -104,7 +104,7 @@ void TCPSender::tick( const size_t ms_since_last_tick )
 {
   time_ += ms_since_last_tick;
   if ( time_ >= RTO_ms_ && !sended_msgs_.empty() ) {
-    const auto& [k, msg] = *sended_msgs_.begin();
+    const auto& [_, msg] = *sended_msgs_.begin();
     if ( window_size_ > 0 ) {
       RTO_ms_ *= 2;
     }

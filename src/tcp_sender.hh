@@ -12,7 +12,6 @@ class TCPSender
   Wrap32 isn_;
   uint64_t initial_RTO_ms_;
   std::queue<TCPSenderMessage> unsend_msgs_ {};
-  // std::list<TCPSenderMessage> sended_msgs_ {};
   std::map<uint64_t, TCPSenderMessage> sended_msgs_ {};
 
   uint16_t window_size_ { 1 };
