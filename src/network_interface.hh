@@ -41,6 +41,12 @@ private:
     std::vector<InternetDatagram> datagrams_ {};
   };
 
+  struct ArpCache
+  {
+    size_t remaining_time_ { 0 };
+    EthernetAddress ethernet_address_;
+  };
+
   // Ethernet (known as hardware, network-access, or link-layer) address of the interface
   EthernetAddress ethernet_address_;
 
@@ -48,7 +54,7 @@ private:
   Address ip_address_;
 
   std::queue<EthernetFrame> frames_ {};
-  std::unordered_map<uint32_t, std::pair<EthernetAddress, size_t>> arp_table_ {};
+  std::unordered_map<uint32_t, ArpCache> arp_table_ {};
   // 因为有可能多个数据报需要前往同一个next_hop 所以这里用vector缓存同一个next_hop下的数据报
   std::unordered_map<uint32_t, WaitingDatagram> waiting_arp_ {};
 

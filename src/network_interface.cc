@@ -29,7 +29,7 @@ void NetworkInterface::send_datagram( const InternetDatagram& dgram, const Addre
   if ( arp_table_.count( addr ) ) {
     EthernetFrame ef;
     ef.header.src = ethernet_address_;
-    ef.header.dst = arp_table_[addr].first;
+    ef.header.dst = arp_table_[addr].ethernet_address_;
     ef.header.type = EthernetHeader::TYPE_IPv4;
     ef.payload = serialize( dgram );
     frames_.emplace( std::move( ef ) );
@@ -97,8 +97,9 @@ optional<InternetDatagram> NetworkInterface::recv_frame( const EthernetFrame& fr
     ok |= arp_msg.opcode == ARPMessage::OPCODE_REPLY && arp_msg.target_ethernet_address == ethernet_address_;
 
     if(ok){
-      arp_table_.emplace( arp_msg.sender_ip_address,
-                          std::make_pair( arp_msg.sender_ethernet_address, ARP_CACHE_TIME ) );
+      arp_table_.emplace(
+        arp_msg.sender_ip_address,
+        ArpCache { .remaining_time_ { ARP_CACHE_TIME }, .ethernet_address_ { arp_msg.sender_ethernet_address } } );
       auto addr = arp_msg.sender_ip_address;
 
       if ( waiting_arp_.count( addr ) ) {
@@ -115,10 +116,10 @@ optional<InternetDatagram> NetworkInterface::recv_frame( const EthernetFrame& fr
 // ms_since_last_tick: the number of milliseconds since the last call to this method
 void NetworkInterface::tick( const size_t ms_since_last_tick ) {
   for ( auto it = arp_table_.begin(); it != arp_table_.end(); ){
-    if ( it->second.second <= ms_since_last_tick ) {
+    if ( it->second.remaining_time_ <= ms_since_last_tick ) {
       it = arp_table_.erase( it );
     } else {
-      it->second.second -= ms_since_last_tick;
+      it->second.remaining_time_ -= ms_since_last_tick;
       ++it;
     }
   }
