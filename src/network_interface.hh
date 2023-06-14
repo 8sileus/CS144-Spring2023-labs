@@ -35,11 +35,22 @@
 class NetworkInterface
 {
 private:
+  struct WaitingDatagram
+  {
+    size_t expiration_time_ { 0 };
+    std::vector<InternetDatagram> datagrams_ {};
+  };
+
   // Ethernet (known as hardware, network-access, or link-layer) address of the interface
   EthernetAddress ethernet_address_;
 
   // IP (known as Internet-layer or network-layer) address of the interface
   Address ip_address_;
+
+  std::queue<EthernetFrame> frames_ {};
+  std::unordered_map<uint32_t, std::pair<EthernetAddress, size_t>> arp_table_ {};
+  // 因为有可能多个数据报需要前往同一个next_hop 所以这里用vector缓存同一个next_hop下的数据报
+  std::unordered_map<uint32_t, WaitingDatagram> waiting_arp_ {};
 
 public:
   // Construct a network interface with given Ethernet (network-access-layer) and IP (internet-layer)
