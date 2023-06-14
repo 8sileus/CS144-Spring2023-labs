@@ -49,7 +49,7 @@ void NetworkInterface::send_datagram( const InternetDatagram& dgram, const Addre
       ef.payload = serialize( arp_msg );
       frames_.emplace( std::move( ef ) );
 
-      waiting_arp_.emplace( addr, WaitingDatagram { .expiration_time_ { ARP_RQUEST_TIME }, .datagrams_ {} } );
+      waiting_arp_.emplace( addr, WaitingDatagram { .remaining_time_ { ARP_RQUEST_TIME }, .datagrams_ {} } );
     }
     waiting_arp_[addr].datagrams_.emplace_back( dgram );
   }

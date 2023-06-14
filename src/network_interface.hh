@@ -37,7 +37,7 @@ class NetworkInterface
 private:
   struct WaitingDatagram
   {
-    size_t expiration_time_ { 0 };
+    size_t remaining_time_ { 0 };
     std::vector<InternetDatagram> datagrams_ {};
   };
 
