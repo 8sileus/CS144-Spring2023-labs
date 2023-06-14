@@ -44,7 +44,7 @@ private:
   struct ArpCache
   {
     size_t remaining_time_ { 0 };
-    EthernetAddress ethernet_address_;
+    EthernetAddress ethernet_address_ {};
   };
 
   // Ethernet (known as hardware, network-access, or link-layer) address of the interface
