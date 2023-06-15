@@ -4,6 +4,7 @@
 
 #include <optional>
 #include <queue>
+#include <variant>
 
 // A wrapper for NetworkInterface that makes the host-side
 // interface asynchronous: instead of returning received datagrams
@@ -52,6 +53,16 @@ public:
 // performs longest-prefix-match routing between them.
 class Router
 {
+private:
+  struct TrieNode
+  {
+    size_t interface_num_ {};
+    bool is_end_ {};
+    std::optional<Address> next_hop_ {};
+    std::unique_ptr<TrieNode> children_[2];
+  };
+
+  std::unique_ptr<TrieNode> root_ { new TrieNode };
   // The router's collection of network interfaces
   std::vector<AsyncNetworkInterface> interfaces_ {};
 
