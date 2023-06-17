@@ -46,7 +46,7 @@ void Router::route()
     while ( auto op = it.maybe_receive() ) {
       auto datagram = op.value();
       auto dst = datagram.header.dst;
-      std::cout << "sendDatagram dst:" << Address::from_ipv4_numeric( dst ).ip() << std::endl;
+      // std::cout << "sendDatagram dst:" << Address::from_ipv4_numeric( dst ).ip() << std::endl;
       TrieNode* cur { root_.get() };
       TrieNode* node { cur };
       for ( int i = 0; i < 32; ++i ) {
@@ -66,8 +66,8 @@ void Router::route()
         auto next_hop = node->next_hop_.has_value() ? node->next_hop_.value()
                                                     : Address::from_ipv4_numeric( datagram.header.dst );
         interface( node->interface_num_ ).send_datagram( datagram, next_hop );
-        std::cout << "send  " << Address::from_ipv4_numeric( datagram.header.dst ).ip() << " ->  " << next_hop.ip()
-                  << " in interface: " << node->interface_num_ << "\n";
+        // std::cout << "send  " << Address::from_ipv4_numeric( datagram.header.dst ).ip() << " ->  " << next_hop.ip()
+        //           << " in interface: " << node->interface_num_ << "\n";
       }
     }
   }

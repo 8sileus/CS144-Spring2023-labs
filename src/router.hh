@@ -4,7 +4,6 @@
 
 #include <optional>
 #include <queue>
-#include <variant>
 
 // A wrapper for NetworkInterface that makes the host-side
 // interface asynchronous: instead of returning received datagrams
@@ -57,7 +56,7 @@ private:
   struct TrieNode
   {
     size_t interface_num_ {};
-    bool is_end_ {};
+    bool is_end_ { false };
     std::optional<Address> next_hop_ {};
     std::unique_ptr<TrieNode> children_[2];
   };
